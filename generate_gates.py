@@ -361,6 +361,7 @@ def main():
         individual_gate = {
             "n": n,
             "gate_id": gate_id,
+            "name": "",
             "table": op,
             "flat": flat
         }

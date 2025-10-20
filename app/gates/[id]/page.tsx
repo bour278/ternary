@@ -3,11 +3,20 @@ import path from 'path';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+interface TandNode {
+  op: string;
+  left?: TandNode | string | number;
+  right?: TandNode | string | number;
+}
+
 interface Gate {
   n: number;
   gate_id: number;
   table: number[][];
   flat: number[];
+  tand_representation?: TandNode;
+  tand_string?: string;
+  tand_operations?: number;
 }
 
 function getColorClass(value: number): string {
@@ -21,6 +30,64 @@ function getColorClass(value: number): string {
     default:
       return 'bg-gray-500 text-white';
   }
+}
+
+function TandTreeNode({ node, depth = 0 }: { node: TandNode | string | number; depth?: number }) {
+  if (typeof node === 'string' || typeof node === 'number') {
+    // Leaf node (variable or constant)
+    const isVariable = typeof node === 'string';
+    const isConstant = typeof node === 'number';
+    
+    return (
+      <div className="flex flex-col items-center">
+        <div className={`
+          px-4 py-2 rounded-lg font-mono font-bold text-lg
+          ${isVariable ? 'bg-amber-500 text-white' : ''}
+          ${isConstant ? 'bg-indigo-500 text-white' : ''}
+          shadow-lg border-2 border-opacity-30
+          ${isVariable ? 'border-amber-700' : ''}
+          ${isConstant ? 'border-indigo-700' : ''}
+        `}>
+          {node}
+        </div>
+      </div>
+    );
+  }
+
+  // Operator node
+  return (
+    <div className="flex flex-col items-center gap-3">
+      {/* TAND operator node */}
+      <div className="bg-red-500 text-white px-5 py-2.5 rounded-lg font-bold text-sm shadow-lg border-2 border-red-700 border-opacity-30">
+        TAND
+      </div>
+      
+      {/* Connection lines container */}
+      <div className="relative flex gap-2">
+        {/* Horizontal connecting line */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-6 flex items-start justify-center">
+          <div className="w-full h-px bg-gray-400 absolute top-0" style={{ width: 'calc(100% - 4rem)' }}></div>
+        </div>
+        
+        {/* Vertical lines */}
+        <div className="flex gap-2 pt-6" style={{ width: '100%' }}>
+          {/* Left branch */}
+          <div className="flex-1 flex flex-col items-center">
+            <div className="w-px h-8 bg-gray-400"></div>
+            <div className="text-xs font-semibold text-gray-600 mb-3 bg-gray-100 px-2 py-0.5 rounded">L</div>
+            {node.left && <TandTreeNode node={node.left} depth={depth + 1} />}
+          </div>
+          
+          {/* Right branch */}
+          <div className="flex-1 flex flex-col items-center">
+            <div className="w-px h-8 bg-gray-400"></div>
+            <div className="text-xs font-semibold text-gray-600 mb-3 bg-gray-100 px-2 py-0.5 rounded">R</div>
+            {node.right && <TandTreeNode node={node.right} depth={depth + 1} />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default async function GateDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -153,6 +220,68 @@ export default async function GateDetailPage({ params }: { params: Promise<{ id:
             </div>
           </div>
         </div>
+
+        {/* TAND Representation Section */}
+        {gate.tand_representation && (
+          <div className="mt-8 max-w-6xl mx-auto">
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">TAND Representation</h2>
+              <p className="text-gray-600 mb-6">
+                This gate can be constructed using <span className="font-bold text-red-600">{gate.tand_operations} TAND operations</span>
+              </p>
+
+              {/* String representation */}
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold text-gray-600 uppercase mb-3">Expression</h3>
+                <div className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
+                  <code className="text-sm font-mono text-gray-900 break-all">
+                    {gate.tand_string}
+                  </code>
+                </div>
+              </div>
+
+              {/* Tree visualization */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-600 uppercase mb-4">Tree Structure</h3>
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-8 overflow-x-auto">
+                  <div className="inline-block min-w-full flex justify-center">
+                    <div className="inline-block">
+                      <TandTreeNode node={gate.tand_representation} />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-3 text-center">
+                  Read from top to bottom: each TAND node takes inputs from its left (L) and right (R) branches
+                </p>
+              </div>
+
+              {/* Legend */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <h3 className="text-sm font-semibold text-gray-600 uppercase mb-4">Legend</h3>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md">
+                      TAND
+                    </div>
+                    <span className="text-sm text-gray-600">TAND operator node</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-amber-500 text-white px-4 py-2 rounded-lg font-mono font-bold text-lg shadow-md">
+                      x
+                    </div>
+                    <span className="text-sm text-gray-600">Variable (input)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-indigo-500 text-white px-4 py-2 rounded-lg font-mono font-bold text-lg shadow-md">
+                      0-2
+                    </div>
+                    <span className="text-sm text-gray-600">Constant value</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="mt-8 flex justify-between max-w-6xl mx-auto">
