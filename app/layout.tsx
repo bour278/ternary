@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import { ThemeToggleButton } from "@/components/theme-toggle-button";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,27 +27,31 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav className="bg-slate-900 text-white shadow-lg">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="text-xl font-bold hover:text-blue-400 transition-colors">
-                Ternary Logic Gates
-              </Link>
-              <div className="flex gap-6">
-                <Link href="/" className="hover:text-blue-400 transition-colors">
-                  Home
+        <Providers>
+          <nav className="bg-white dark:bg-black text-black dark:text-white border-b border-gray-200 dark:border-white/20 sticky top-0 z-50">
+            <div className="container mx-auto px-4 py-5">
+              <div className="flex items-center justify-between">
+                <Link href="/" className="text-2xl font-bold hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                  Ternary Logic Gates
                 </Link>
-                <Link href="/gates" className="hover:text-blue-400 transition-colors">
-                  All Gates
-                </Link>
+                <div className="flex gap-4 items-center">
+                  <Link href="/" className="px-5 py-2 hover:bg-gray-100 dark:hover:bg-white/10 transition-all font-medium rounded-lg">
+                    Home
+                  </Link>
+                  <Link href="/gates" className="px-5 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-all font-medium border border-gray-300 dark:border-white/20 rounded-lg">
+                    All Gates
+                  </Link>
+                  <ThemeToggleButton />
+                </div>
               </div>
             </div>
-          </div>
-        </nav>
-        {children}
+          </nav>
+          {children}
+        </Providers>
       </body>
     </html>
   );

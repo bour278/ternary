@@ -25,28 +25,28 @@ function getColorClass(value: number): string {
 function TruthTable({ table, gateId }: { table: number[][]; gateId: number }) {
   return (
     <Link href={`/gates/${gateId}`} className="block">
-      <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow cursor-pointer">
+      <div className="border border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-pointer rounded-lg">
         <div className="text-center mb-3">
-          <span className="text-sm font-semibold text-gray-700">Gate #{gateId}</span>
+          <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">Gate #{gateId}</span>
         </div>
         <div className="flex justify-center">
           <table className="border-collapse">
             <thead>
               <tr>
-                <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-semibold"></th>
-                <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-semibold">0</th>
-                <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-semibold">1</th>
-                <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-semibold">2</th>
+                <th className="border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 px-3 py-2 text-xs font-semibold text-gray-800 dark:text-gray-200"></th>
+                <th className="border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 px-3 py-2 text-xs font-semibold text-gray-800 dark:text-gray-200">0</th>
+                <th className="border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 px-3 py-2 text-xs font-semibold text-gray-800 dark:text-gray-200">1</th>
+                <th className="border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 px-3 py-2 text-xs font-semibold text-gray-800 dark:text-gray-200">2</th>
               </tr>
             </thead>
             <tbody>
               {table.map((row, rowIdx) => (
                 <tr key={rowIdx}>
-                  <td className="border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-semibold text-center">
+                  <td className="border border-gray-300 dark:border-white/20 bg-gray-200 dark:bg-white/10 px-3 py-2 text-xs font-semibold text-center text-gray-800 dark:text-gray-200">
                     {rowIdx}
                   </td>
                   {row.map((cell, cellIdx) => (
-                    <td key={cellIdx} className="border border-gray-300 p-0">
+                    <td key={cellIdx} className="border border-gray-300 dark:border-white/20 p-0">
                       <div className={`${getColorClass(cell)} px-3 py-2 text-center font-bold text-sm`}>
                         {cell}
                       </div>
@@ -107,14 +107,14 @@ function Pagination({ currentPage, totalPages }: { currentPage: number; totalPag
       {currentPage > 1 ? (
         <Link
           href={`/gates?page=${currentPage - 1}`}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          className="px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all font-semibold border border-black dark:border-white rounded-lg"
         >
           ← Previous
         </Link>
       ) : (
         <button
           disabled
-          className="px-4 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+          className="px-5 py-2.5 bg-gray-200 dark:bg-white/10 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-gray-300 dark:border-white/20 rounded-lg"
         >
           ← Previous
         </button>
@@ -124,17 +124,17 @@ function Pagination({ currentPage, totalPages }: { currentPage: number; totalPag
       <div className="flex gap-1">
         {getPageNumbers().map((page, idx) => (
           page === '...' ? (
-            <span key={`ellipsis-${idx}`} className="px-3 py-2 text-gray-500">
+            <span key={`ellipsis-${idx}`} className="px-3 py-2 text-gray-500 dark:text-gray-400">
               ...
             </span>
           ) : (
             <Link
               key={page}
               href={`/gates?page=${page}`}
-              className={`px-4 py-2 rounded transition-colors ${
+              className={`px-4 py-2 transition-all rounded-lg ${
                 currentPage === page
-                  ? 'bg-blue-600 text-white font-bold'
-                  : 'bg-white text-gray-700 hover:bg-gray-200'
+                  ? 'bg-black dark:bg-white text-white dark:text-black font-bold border border-black dark:border-white'
+                  : 'bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/20'
               }`}
             >
               {page}
@@ -147,14 +147,14 @@ function Pagination({ currentPage, totalPages }: { currentPage: number; totalPag
       {currentPage < totalPages ? (
         <Link
           href={`/gates?page=${currentPage + 1}`}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          className="px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all font-semibold border border-black dark:border-white rounded-lg"
         >
           Next →
         </Link>
       ) : (
         <button
           disabled
-          className="px-4 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed"
+          className="px-5 py-2.5 bg-gray-200 dark:bg-white/10 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-gray-300 dark:border-white/20 rounded-lg"
         >
           Next →
         </button>
@@ -187,17 +187,17 @@ export default function GatesGrid({ currentPage }: { currentPage: number }) {
   return (
     <>
       {/* Page Info */}
-      <div className="mb-4 text-center">
-        <p className="text-gray-600">
+      <div className="mb-6 text-center">
+        <p className="text-gray-600 dark:text-gray-400 font-light">
           Showing gates {startGateId + 1} - {endGateId} of {TOTAL_GATES} 
-          <span className="ml-2 text-sm">
+          <span className="ml-2 text-sm text-gray-500 dark:text-gray-500">
             (Page {currentPage} of {totalPages})
           </span>
         </p>
       </div>
 
       {/* Gates Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
         {gates.map((gate) => (
           <TruthTable 
             key={gate.gate_id} 
